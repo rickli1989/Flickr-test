@@ -1,5 +1,5 @@
 // SearchScreen.js
-import React, {Fragment, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {fetchImagesFromFlickr} from '../lib/FlickrAPI';
 import {
   View,
@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
@@ -31,8 +32,8 @@ const SearchScreen = () => {
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [isDropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [searching, setSearching] = useState(false);
-  const searchbarRef = useRef(null);
-  const scrollViewRef = useRef(null);
+  const searchbarRef: React.RefObject<any> = useRef(null);
+  const scrollViewRef: React.RefObject<any> = useRef(null);
 
   const searchImages = async (page = 1, term = searchTerm) => {
     setSearching(true);
@@ -40,7 +41,7 @@ const SearchScreen = () => {
       if (term) {
         const response = await fetchImagesFromFlickr(term, page);
         if (response.data?.photos?.photo.length === 0) {
-          alert('No results found');
+          Alert.alert('No results found');
         } else {
           setPhotos(prevPhotos => [
             ...prevPhotos,
@@ -87,6 +88,7 @@ const SearchScreen = () => {
   return (
     <View style={{flex: 1}}>
       <SearchBar
+        testID="search-input"
         ref={searchbarRef}
         placeholder="Search image..."
         onChangeText={setSearchTerm}
@@ -127,7 +129,7 @@ const SearchScreen = () => {
         </View>
       )}
       <Overlay isVisible={searching} overlayStyle={styles.overlay}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" testID="loading-indicator" />
       </Overlay>
 
       <TouchableWithoutFeedback
@@ -136,6 +138,7 @@ const SearchScreen = () => {
         }}
         accessible={false}>
         <FlatList
+          testID="image-list"
           ref={scrollViewRef}
           data={photos}
           renderItem={renderItem}
@@ -159,11 +162,11 @@ const styles = StyleSheet.create({
   dropdownContainer: {
     backgroundColor: 'white',
     marginHorizontal: 10,
-    // elevation: 5,
-    // shadowColor: '#000',
-    // shadowOffset: {width: 0, height: 2},
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   overlay: {
     width: 'auto',
