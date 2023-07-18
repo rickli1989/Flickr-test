@@ -48,4 +48,4 @@ yarn ios
 2. Scroll and load more results
 3. Page navigation when fetching Flickr API
 
-![Demo Video](./demo.mov)
+[![Demo Video](https://img.youtube.com/vi/rDiijWEWwK8/0.jpg)](https://www.youtube.com/watch?v=rDiijWEWwK8)
